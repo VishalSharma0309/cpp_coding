@@ -22,19 +22,51 @@ class QueueUsingArray{
     }
 
     void enqueue(int info){
-        if (firstIndex == nextIndex){
-            cout<<"Error: Overflow. Cannot insert"<<endl;
-            return;
-        }
-        else {
-            data[nextIndex] = info;
-            size++;
-            nextIndex = (nextIndex + 1) % capacity;
+         // Toremove the limitation of size 
+        // we will create a new array of the double capacity once our earlier array is full
 
-            if (firstIndex == -1){
-                firstIndex = 0;
+        // first we need to copy all the elements of the original array to the new one
+        // elements should be copied in the order of their insertion to the original array
+        // to do this we start from firstIndex and run in circle to reach firstIndex again copying 
+        // update: firstIndex=0 and nextIndex=capacity
+    
+        
+        
+        
+        if (firstIndex == nextIndex){
+            //cout<<"Error: Overflow. Cannot insert"<<endl;
+            //return;
+            T * newData = new T[2*capacity];
+            for (int i=0 ; i<capacity ; ++i){
+                //cout<<data[firstIndex]<<endl;
+                newData[i] = data[firstIndex];
+                if (firstIndex==capacity-1){
+                    firstIndex = 0;
+                }
+                else {
+                    firstIndex++;
+                }
             }
+            
+            delete [] data;
+            data = newData;
+            
+            firstIndex = 0;
+            //cout<< data[firstIndex]<< endl;
+            nextIndex = capacity;
+            capacity = 2*capacity;
         }
+             
+        data[nextIndex] = info;
+        //cout<<nextIndex<<" : "<<data[nextIndex]<<endl;
+        size++;
+        //cout<<size<<endl;
+        nextIndex = (nextIndex + 1) % capacity;
+        if (firstIndex == -1){
+            firstIndex = 0;
+        }
+
+        //cout<< firstIndex << ": : : "<< nextIndex<<endl;
         
     }
 
@@ -81,10 +113,13 @@ int main(){
     q.enqueue(30);
     q.enqueue(40);
     q.enqueue(50);
+
+    //cout<<q.getSize()<<endl;
     q.enqueue(60);
     
     cout<< q.front() << endl;
     cout<< q.dequeue() << endl;
+    cout<< q.front() << endl;
     cout<< q.getSize() << endl;
     
 }
