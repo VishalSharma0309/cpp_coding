@@ -86,6 +86,19 @@ class Queue {
     }
 };
 
+/*
+Inbuilt Queue
+How to include? 
+    #include<queue>
+
+Functions:
+    1. void push (T elem)
+    2. T front ();
+    3. void pop ();
+    4. int size ();
+    5. bool empty ();
+*/
+
 
 int main(){
     Queue <int> q;
