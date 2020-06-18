@@ -75,6 +75,109 @@ void printTree (TreeNode<int> * root){
 
 }
 
+
+int countNodes (TreeNode <int> * root){
+    
+    // edge case
+    if (root == NULL){
+        return 0;
+    }
+    
+    int Size = 1;
+    
+    for (int i=0 ; i<root->children.size() ; ++i){
+        Size += countNodes(root->children[i]);     
+    }
+    return Size;
+}
+
+// height = number of levels
+
+int height (TreeNode <int> * root){
+    if (root == NULL){
+        return 0;
+    }
+    int max = 1;
+    for (int i=0 ; i<root->children.size() ; ++i){
+        int temp = 1;
+        temp += height(root->children[i]);
+        if (temp>max){
+            max = temp;
+        } 
+    }
+    return max;
+}
+
+
+// print all nodes at depth (used interchangeably with level) k
+// depth/level starts at zero
+void printNodesAtk (TreeNode <int> * root, int k){
+
+    // base case
+    if (k==0){
+        cout << root->data << endl;
+        return;
+    }
+
+    // recursive loop
+    for (int i=0 ; i<root->children.size() ; ++i){
+        printNodesAtk (root->children[i] , k-1);
+    }
+
+}
+
+// return the number of leafs in a tree
+// a leaf is a node which does not have any children
+int countLeaf (TreeNode <int> * root){
+    // edge case
+    if (root == NULL){
+        return 0;
+    }
+        
+    // base case    
+    int count = 0;
+    if (root->children.size() == 0){
+        return 1;
+    }
+
+    // recursive loop
+    for (int i=0 ; i<root->children.size() ; ++i){
+        count += countLeaf (root->children[i]); 
+    }
+
+    return count;
+}
+
+
+// Tree traversal methods
+/*  1. Pre-Order Traversal
+        - the root gets printed first and then its children
+        - the usual recursive traversal (refer printTree)
+    2. Post-Order Traversal
+        - root says first print my children and then myself
+        
+*/
+
+void postOrderTraversal (TreeNode <int> * root){
+    if (root == NULL){
+        return;
+    }
+    
+    if (root->children.size() == 0){
+        cout << root->data << endl;
+    }
+
+    for (int i=0 ; i<root->children.size() ; ++i){
+        postOrderTraversal (root->children[i]);
+        if (i == root->children.size() - 1){
+            cout << root->data << endl;
+        }
+    }
+}
+
+
+
+// input tree: 1 3 2 3 4 2 5 6 1 7 1 8 2 9 10 0 0 0 0 0
 int main(){
     
     // create a simple 3 node trees s.t. {1}->{2,3}
@@ -94,6 +197,16 @@ int main(){
     TreeNode <int> * root = takeInputLevelWise();
     
     printTree (root);
+    postOrderTraversal (root);
+
+    cout << "Total number of nodes : " << countNodes(root) << endl;
+    cout << "Height of the tree : " << height(root) << endl;
+
+
+    cout << "Nodes at depth 2: " << endl;
+    printNodesAtk (root , 2);
+
+    cout << "No. of leaves = " << countLeaf (root) << endl;
     // TODO deleting the tree
 
     return 0;
