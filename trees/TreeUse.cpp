@@ -162,7 +162,7 @@ void postOrderTraversal (TreeNode <int> * root){
     if (root == NULL){
         return;
     }
-    
+    /* Method 1: works fine 
     if (root->children.size() == 0){
         cout << root->data << endl;
     }
@@ -173,6 +173,26 @@ void postOrderTraversal (TreeNode <int> * root){
             cout << root->data << endl;
         }
     }
+    */
+
+    // method 2
+    for (int i=0 ; i<root->children.size() ; ++i){
+        postOrderTraversal (root->children[i]);
+    }
+    cout << root->data << endl;
+}
+
+
+// to delete the tree
+// it must be done using Post-Order Traversal
+
+void deleteTree (TreeNode <int> * root){
+    // recursive loop
+    for (int i=0 ; i<root->children.size() ; ++i){
+        deleteTree (root->children[i]);
+    }
+    // base case
+    delete root;
 }
 
 
@@ -207,7 +227,13 @@ int main(){
     printNodesAtk (root , 2);
 
     cout << "No. of leaves = " << countLeaf (root) << endl;
+    
     // TODO deleting the tree
+    
+    // using function
+    //deleteTree (root);
 
+    // using destructor
+    delete root;
     return 0;
 }
