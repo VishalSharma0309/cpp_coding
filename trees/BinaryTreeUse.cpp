@@ -218,6 +218,84 @@ BinaryTreeNode <int> * constructBTree (vector <int> in , vector <int> pre){
     
 }
 
+/*
+Leetcode QUES:
+Given the root node of a binary search tree (BST) and a value. 
+You need to find the node in the BST that the node's value equals the given value. 
+Return the subtree rooted with that node. 
+If such node doesn't exist, you should return NULL.
+*/
+
+BinaryTreeNode <int> * searchBST (BinaryTreeNode <int> * root , int value){
+    queue <BinaryTreeNode <int> *> pendingNodes;
+    
+    if (root == NULL){
+        return NULL;
+    }
+
+    pendingNodes.push(root);
+    int found = -1;
+    while (pendingNodes.size()!=0){
+        BinaryTreeNode <int> * f = pendingNodes.front();
+        pendingNodes.pop();
+        if (f->data == value){
+            found = 1;
+            return f;
+        }
+        if (f->left != NULL)
+            pendingNodes.push(f->left);
+        if (f->right != NULL)
+        pendingNodes.push(f->right);
+    }
+
+    if (found == -1){
+        return NULL;
+    }
+}
+
+
+/*
+
+LeetCode: 965. Univalued Binary Tree
+A binary tree is univalued if every node in the tree has the same value.
+
+Return true if and only if the given tree is univalued.
+
+*/
+
+bool isUnivalTree(BinaryTreeNode <int> * root) {
+    
+    if (root == NULL){
+        return false;
+    }
+    queue <BinaryTreeNode <int> *> pendingNodes;
+
+    pendingNodes.push(root);
+    while (pendingNodes.size() != 0){
+        BinaryTreeNode <int> * f = pendingNodes.front();
+        pendingNodes.pop();
+
+        if (f->left != NULL) {
+            if (f->data != f->left->data){
+                return false;
+            }
+            else {
+                pendingNodes.push(f->left);
+            }
+        }
+
+        if (f->right != NULL) {
+            if (f->data != f->right->data){
+                return false;
+            }
+            else {
+                pendingNodes.push(f->right);
+            }
+        }
+    }
+
+    return true;
+}
 
 // 1 2 3 4 5 -1 6 -1 -1 -1 -1 -1 -1
 int main (){
@@ -234,12 +312,17 @@ int main (){
 
     cout << "Total number of nodes = " << countNodes(root) << endl;
 
-    vector <int> in {4,2,5,1,3,6};
-    vector <int> pre {1,2,4,5,3,6};
+    //vector <int> in {4,2,5,1,3,6};
+    //vector <int> pre {1,2,4,5,3,6};
 
-    BinaryTreeNode <int> * f = constructBTree (in , pre);
-    printTreeLevelWise (f);
+    //BinaryTreeNode <int> * f = constructBTree (in , pre);
+    //printTreeLevelWise (f);
 
+    //BinaryTreeNode <int> * found = searchBST (root , 2);
+    //printTreeLevelWise (found);
+    
+    cout << isUnivalTree (root) << endl;
+    
     delete root;
     
     return 0;
