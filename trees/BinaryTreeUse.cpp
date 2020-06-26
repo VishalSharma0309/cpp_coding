@@ -146,6 +146,36 @@ void inorderPrint (BinaryTreeNode <int> * root) {
 
 }
 
+vector <int> ansinorder;
+vector <int> inorder (BinaryTreeNode <int> * root){
+    //ansinorder.clear();
+    if (root == NULL){
+        ansinorder.push_back(-1);
+        return ansinorder;
+    }
+    inorder (root->left);
+    ansinorder.push_back(root->data);
+    inorder (root->right);
+
+    return ansinorder;
+}
+
+
+vector <int> anspreorder;
+vector <int> preorder (BinaryTreeNode <int> * root){
+    //anspreorder.clear();
+    if (root == NULL){
+        anspreorder.push_back(-1);
+        return anspreorder;
+    }
+    anspreorder.push_back (root->data);
+    preorder (root->left);
+    preorder (root->right);
+
+    return anspreorder;
+
+}
+
 // QUES: Create the binary tree if given its in-order and pre-order in 1-D form.
 /*
 soln;
@@ -297,6 +327,150 @@ bool isUnivalTree(BinaryTreeNode <int> * root) {
     return true;
 }
 
+
+/*
+LeetCode: 101. Symmetric Tree
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+*/
+
+// approach: in-order traversal = [left] [root] [right]
+// if left and right are exact mirror images of each other then the tree is symmetric
+
+
+// NOTE: approach not working when nodes have same data
+bool isSymmetric (BinaryTreeNode <int> * root){
+    
+    if (root == NULL){
+        return false;
+    }
+    
+    vector <int> in = inorder (root);
+    ansinorder.clear();
+    // if size = 1
+    if (in.size() == 1){
+        return true;
+    }
+
+    // size should be odd
+    if (in.size()%2 == 0){
+        cout << "Size even" << endl;
+        return false;
+    }
+
+    int rootIndex;
+
+    for (int i=0 ; i<in.size() ; ++i){
+        if (in[i] == root->data){
+            rootIndex = i;
+            break;
+        }
+    }
+    
+    // checking if rootIndex is the middle of in
+    if (rootIndex != (in.size()-1)/2){
+        cout << "Root Index Inmatch" << endl;
+        return false;
+    }
+    
+    for (int i=0 ; i<(in.size()-1)/2 ; ++i){
+        if (in[rootIndex - i] != in[rootIndex + i]){
+            return false;
+        }
+    }
+
+    return true;
+    
+
+}
+
+
+// approach 2: recursive method
+// check if left side of a tree is same as right of another and vice versa
+// WORKS GREAT!! USE THIS!
+
+bool isMirror (BinaryTreeNode <int> * p , BinaryTreeNode <int> * q){
+    if (p==NULL && q==NULL){
+        return true;
+    }
+
+    if (p && q && p->data == q->data){
+        return (isMirror (p->left , q->right) && isMirror (p->right , q->left));
+    }
+
+    return false;
+}
+
+bool isSymmetricRec (BinaryTreeNode <int> * root){
+    if (root == NULL){
+        return true;
+    }
+    
+    return (isMirror (root->left , root->right));
+}
+
+
+/*
+100. Same Tree
+Given two binary trees, write a function to check if they are the same or not.
+
+Two binary trees are considered the same if they are structurally identical and the nodes have the same value.
+
+*/
+
+// Approach 1: two trees with same in-order and pre-order are the same
+
+bool sameTree (BinaryTreeNode <int> * p , BinaryTreeNode <int> * q){
+
+    // in order
+    vector <int> inp = inorder (p);
+    ansinorder.clear();
+    vector <int> inq = inorder (q);
+    ansinorder.clear();
+    for (int i=0 ; i<inp.size() ; ++i){
+        cout << inp[i] << " ";
+    }
+    cout << endl;
+
+
+    for (int i=0 ; i<inq.size() ; ++i){
+        cout << inq[i] << " ";
+    }
+    cout << endl;
+    // pre order
+    vector <int> prep = preorder (p); 
+    anspreorder.clear();
+    vector <int> preq = preorder (q);
+    anspreorder.clear();
+    
+    for (int i=0 ; i<prep.size() ; ++i){
+        cout << prep[i] << " ";
+    }
+    cout << endl;
+    
+    for (int i=0 ; i<preq.size() ; ++i){
+        cout << preq[i] << " ";
+    }
+    cout << endl;
+    
+    /*if (inp.size() != inq.size() && prep.size() != preq.size()){
+        cout << "size unequal" << endl;
+        return false;
+    }*/
+    //if (inp.size() == inq.size() && prep.size() == preq.size()) {
+        if (inp != inq){
+            return false;
+        }
+        if (prep != preq){
+            return false;
+        }
+
+        return true;
+    
+    
+}
+
+
+
 // 1 2 3 4 5 -1 6 -1 -1 -1 -1 -1 -1
 int main (){
 
@@ -310,7 +484,7 @@ int main (){
     BinaryTreeNode <int> * root = takeInputLevelWise ();
     printTreeLevelWise (root);
 
-    cout << "Total number of nodes = " << countNodes(root) << endl;
+    //cout << "Total number of nodes = " << countNodes(root) << endl;
 
     //vector <int> in {4,2,5,1,3,6};
     //vector <int> pre {1,2,4,5,3,6};
@@ -321,9 +495,35 @@ int main (){
     //BinaryTreeNode <int> * found = searchBST (root , 2);
     //printTreeLevelWise (found);
     
-    cout << isUnivalTree (root) << endl;
+    //cout << isUnivalTree (root) << endl;
     
+    /*
+    vector <int> in = inorder (root);
+    for (int i=0 ; i<in.size() ; ++i){
+        cout << in[i] << " ";
+    }
+    cout << endl;
+
+    vector <int> pre = preorder (root);
+    for (int j=0 ; j<pre.size() ; ++j){
+        cout << pre[j] << " ";
+    }
+    cout << endl;
+    */
+    /*
+    BinaryTreeNode <int> * p = takeInputLevelWise ();
+    printTreeLevelWise (p);
+
+    BinaryTreeNode <int> * q = takeInputLevelWise ();
+    printTreeLevelWise (q);
+
+    cout << sameTree(p,q) << endl; 
+
+    delete p;
+    delete q;
+    */
+
+    cout << isSymmetricRec (root) << endl;
     delete root;
-    
     return 0;
 }
