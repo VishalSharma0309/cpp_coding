@@ -177,6 +177,7 @@ vector <int> preorder (BinaryTreeNode <int> * root){
 }
 
 // QUES: Create the binary tree if given its in-order and pre-order in 1-D form.
+// NO DUPLICATES ALLOWED IN THE TREE
 /*
 soln;
 pre: [root] [left] [right]
@@ -199,54 +200,51 @@ STEP 2: break into smaller ques i.e. obtain pre and in of
     
 
 */
-
-BinaryTreeNode <int> * constructBTree (vector <int> in , vector <int> pre){
-
-    if (in.size() == 0){
+BinaryTreeNode <int> * buildTreeHelper (int * in, int * pre, int inS, int inE, int preS, int preE){
+    // base case (size=0) i.e inS > inE
+    if (inS > inE){
         return NULL;
     }
-
-    if (in.size() == 1){
-        BinaryTreeNode <int> * root = new BinaryTreeNode <int> (pre[0]);
-        return root;
-    }
+    
+    // find rootData
+    int rootData = pre[preS];
     
     
-    BinaryTreeNode <int> * root = new BinaryTreeNode <int> (pre[0]);
-    int rootIndex;
-    for (int i=0 ; i<in.size() ; ++i){
-        if (in[i] == pre[0]){
+    // find rootIndex
+    int rootIndex = -1;
+    for (int i=inS ; i<=inE ; ++i){
+        if (in[i]==rootData){
             rootIndex = i;
             break;
         }
     }
 
-    vector <int> :: const_iterator LInS = in.begin() + 0;
-    vector <int> :: const_iterator LInE = in.begin() + rootIndex - 1;
-    vector <int> :: const_iterator LPreS = pre.begin() +  1;
-    vector <int> :: const_iterator LPreE = pre.begin() + 1 + rootIndex;
-    /*
-    int LInE = in[rootIndex-1];
-    int LPreS = pre[1];
-    int LPreE = pre[1+rootIndex];  
-    */
-    vector <int> inL (LInS , LInE);
-    vector <int> preL (LPreS, LPreE);
-    root->left = constructBTree (inL, preL);
-
-    vector <int> :: const_iterator RInS = in.begin() + rootIndex + 1;
-    vector <int> :: const_iterator RInE = in.end();
-    vector <int> :: const_iterator RPreS = LPreE + 1;
-    vector <int> :: const_iterator RPreE = pre.end();
-
-    vector <int> inR (RInS , RInE);
-    vector <int> preR (RPreS, RPreE);
-    root->right = constructBTree (inR, preR);
-
-    return root;
-
+    int lInS = inS;
+    int lInE = rootIndex - 1;
+    int lPreS = preS + 1;
+    int lPreE = lInE - lInS + lPreS;;
+    int rInS = rootIndex + 1; 
+    int rInE = inE;    
+    int rPreS = lPreE + 1; 
+    int rPreE = preE; 
     
+
+       
+    // find the above 8 values to use recursion effectively
+
+
+    BinaryTreeNode <int> * root = new BinaryTreeNode <int> (rootData);
+    root->left = buildTreeHelper (in, pre, lInS, lInE, lPreS, lPreE);
+    root->right = buildTreeHelper (in, pre, rInS, rInE, rPreS, rPreE);
+    return root;
 }
+
+BinaryTreeNode <int> * constructBTree (int * in , int * pre, int size){
+
+    return (buildTreeHelper(in, pre, 0, size-1, 0, size-1));    
+}
+
+
 
 /*
 Leetcode QUES:
@@ -469,7 +467,115 @@ bool sameTree (BinaryTreeNode <int> * p , BinaryTreeNode <int> * q){
     
 }
 
+// approach 2: recursively checking if left of one tree is equal to left of another
 
+bool sameTreeRec (BinaryTreeNode <int> * p , BinaryTreeNode <int> * q){
+    if (p==NULL && q==NULL){
+        return true;
+    }
+
+    if (p && q && p->data == q->data){
+        return (sameTreeRec (p->left,q->left) && sameTreeRec (p->right , q->right));
+    }
+
+    return false;
+}
+
+
+/*
+LeetCode 104. Maximum Depth of Binary Tree
+Given a binary tree, find its maximum depth.
+
+The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+*/
+
+// approach: recursive
+int maxDepth(BinaryTreeNode <int> * root) {
+    int size = 1;
+        
+    if (root==NULL){
+        return 0;
+    }
+        
+    if (root->left == NULL && root->right == NULL){
+        return size;
+    }
+        
+    int left = maxDepth (root->left);
+    int right = maxDepth (root->right);
+    
+    if (left > right){
+        size += left;
+    }
+    else {
+        size += right;
+    }
+    return size;
+}
+
+int maxDepthBetter (BinaryTreeNode <int> * root){
+    if (root == NULL){
+        return 0;
+    }
+    return (1 + max (maxDepthBetter (root->left) , maxDepthBetter (root->right)));
+}
+
+// LeetCode 543: Diameter of a binary tree
+// maximum distance between any two nodes (may or may not pass through the root)
+
+/*
+Approach: both nodes (to be taken into account) can be:
+1. on left and right side then dia = left height + right height
+2. both on left side (left height + right height) but for root as root->left 
+3. both on right side
+
+maximum (dia(root) , dia(root->left) , dia(root->right))
+
+Complexity: for a balanced tree- O(nlogn) [here height of the tree is logn] => n*h
+            for an unbalaced tree (slanted towards one side)- o(n^2) [here height is n] => n*h
+            hence worst case O(n^2)
+*/
+
+int findDia (BinaryTreeNode <int> * root){
+    if (root == NULL){
+        return 0;
+    }
+
+    int option1 = maxDepth (root->left) + maxDepth (root->right);
+    int option2 = findDia (root->left);
+    int option3 = findDia (root->right);
+
+    return max (option1 , max (option2 , option3));
+}
+
+// above code is O(n^2) for one sided trees and hence we require a more optimized solution
+// approach 2: we ask root->left and root->right for both height and dia 
+
+// pair is built in and can have different types of inputs
+pair <int , int> heightDia (BinaryTreeNode <int> * root){
+    if (root == NULL){
+        pair <int, int> p;
+        p.first = 0;
+        p.second = 0;
+        return p;
+    }
+
+    pair <int, int> leftAns = heightDia (root->left);
+    pair <int, int> rightAns = heightDia (root->right);
+    int ld = leftAns.second;
+    int lh = leftAns.first;
+    int rd = rightAns.second;
+    int rh = rightAns.first;
+
+    int height = 1 + max(lh , rh);
+    int dia = max (lh + rh , max (ld , rd));
+    pair <int , int> p;
+    p.first = height;
+    p.second = dia;
+    return p;
+
+}
 
 // 1 2 3 4 5 -1 6 -1 -1 -1 -1 -1 -1
 int main (){
@@ -481,8 +587,8 @@ int main (){
     root->left = node1;
     root->right = node2;
     */
-    BinaryTreeNode <int> * root = takeInputLevelWise ();
-    printTreeLevelWise (root);
+    //BinaryTreeNode <int> * root = takeInputLevelWise ();
+    //printTreeLevelWise (root);
 
     //cout << "Total number of nodes = " << countNodes(root) << endl;
 
@@ -517,13 +623,30 @@ int main (){
     BinaryTreeNode <int> * q = takeInputLevelWise ();
     printTreeLevelWise (q);
 
-    cout << sameTree(p,q) << endl; 
+    cout << sameTreeRec (p,q) << endl; 
 
     delete p;
     delete q;
     */
 
-    cout << isSymmetricRec (root) << endl;
+    //cout << isSymmetricRec (root) << endl;
+    
+    // buildBtree EX
+    // 1 2 3 4 5 6 7 -1 -1 -1 -1 8 9 -1 -1 -1 -1 -1 -1 
+    //int in[] = {4, 2, 5, 1, 8, 6, 9, 3, 7};
+    //int pre[] = {1, 2, 4, 5, 3, 6, 8, 9, 7};
+    
+    //BinaryTreeNode <int> * root = constructBTree (in , pre, 9);
+    //printTreeLevelWise (root);
+    
+    BinaryTreeNode <int> * root = takeInputLevelWise ();
+    printTreeLevelWise (root);
+    pair <int , int> p = heightDia (root);
+
+    cout << "height: " << p.first << endl;
+    cout << "diameter: " << p.second << endl;
+    
+    
     delete root;
     return 0;
 }
