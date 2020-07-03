@@ -249,10 +249,30 @@ bool isBST3 (BinaryTreeNode <int> * root, int min = INT_MIN , int max = INT_MAX)
 
 }
 
+
+// construct a balanced BST from a sorted array
+/*
+Approach: recurcively mid becomes the root
+*/
+
+BinaryTreeNode <int> * constructBST (int arr[] , int si , int ei){
+    if (ei<si){
+        return NULL;
+    }
+    
+    int mid = (si+ei)/2;
+    BinaryTreeNode <int> * root = new BinaryTreeNode <int> (arr[mid]);
+    root->left = constructBST (arr, si, mid-1);
+    root->right = constructBST (arr, mid+1, ei);
+
+    return root;
+
+}
+
 // 4 2 6 1 3 5 7 -1 -1 -1 -1 -1 -1 -1 -1 
 int main (){
-    BinaryTreeNode <int> * root = takeInputLevelWise ();
-    printTreeLevelWise (root);
+    //BinaryTreeNode <int> * root = takeInputLevelWise ();
+    //printTreeLevelWise (root);
 
     //cout << searchBST (root , 2)->data << endl;
     //printInRangeRec (root , 2, 4);
@@ -260,7 +280,10 @@ int main (){
     //isBSTReturn out = isBST2 (root);
     //cout << out.isBST << endl;
     
-    cout << isBST3 (root) << endl;
+    //cout << isBST3 (root) << endl;
+    int arr[] = {1,2,3,4,5,6,7};
+    BinaryTreeNode <int> * root = constructBST (arr, 0, 6);
+    printTreeLevelWise (root);
     delete root;
     return 0;
 }

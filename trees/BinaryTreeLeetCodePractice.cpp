@@ -247,7 +247,98 @@ The minimum depth is the number of nodes along the shortest path from the root n
 */
 
 int minDepth (BinaryTreeNode <int> * root){
+    if (root == NULL){
+        return 0;
+    }
+
+    if (root->left==NULL && root->right==NULL){
+        return 1;
+    }
+
+    int leftMin = 0, rightMin = 0; 
     
+    leftMin += minDepth (root->left);
+    rightMin += minDepth (root->right);
+
+    return min (leftMin , rightMin);
+}
+
+/*
+LeetCode : Path to the node
+Approach:
+- base case: if root NULL return NULL vector
+             if root == info push root into vector and return
+
+*/
+
+vector <int> * getRootToNodePath (BinaryTreeNode <int> * root, int data){
+    if (root == NULL){
+        return NULL;
+    }
+    if (root->data == data){
+        vector <int> * output = new vector <int> ();
+        output->push_back (root->data);
+        return output;
+    }
+
+    vector <int> * leftOut = getRootToNodePath (root->left , data);
+    if (leftOut != NULL){
+        leftOut->push_back (root->data);
+        return leftOut;
+    }
+
+    vector <int> * rightOut = getRootToNodePath (root->right , data);
+    if (rightOut != NULL){
+        rightOut->push_back (root->data);
+        return rightOut;
+    }
+
+    else {
+        return NULL;
+    }
+}
+
+/*
+102. Binary Tree Level Order Traversal
+Given a binary tree, return the level order traversal of its nodes' values. (ie, from left to right, level by level)
+*/
+
+vector <vector <int> > levelOrder (BinaryTreeNode <int> * root){
+    vector<vector <int>> lo;
+    if (root == NULL){
+        return lo;
+    }
+        
+    queue <BinaryTreeNode <int> *> pendingNodes;
+    pendingNodes.push (root);
+    int x=0;
+        
+    while (pendingNodes.size()!=0){
+        int cur = pendingNodes.size();
+        
+        lo.push_back(vector<int>());
+        
+        for (int i=0 ; i<cur ; ++i){
+            
+            BinaryTreeNode <int> * f = pendingNodes.front();
+            pendingNodes.pop();
+            lo[x].push_back (f->data);
+
+            if (f->left != NULL){
+                pendingNodes.push (f->left);
+            }
+
+            if (f->right != NULL){
+                pendingNodes.push (f->right);
+            }
+            
+
+        }
+        
+        x++;
+    }
+
+    return lo;
 }
 
 // 1 2 2 3 3 -1 -1 4 4 -1 -1 -1 -1 -1 -1
@@ -259,18 +350,34 @@ int minDepth (BinaryTreeNode <int> * root){
 
 int main(){
 
-    BinaryTreeNode <int> * root1 = takeInputLevelWise ();
-    printTreeLevelWise (root1);
+    //BinaryTreeNode <int> * root1 = takeInputLevelWise ();
+    //printTreeLevelWise (root1);
 
     
-    BinaryTreeNode <int> * root2 = takeInputLevelWise ();
-    printTreeLevelWise (root2);
+    //BinaryTreeNode <int> * root2 = takeInputLevelWise ();
+    //printTreeLevelWise (root2);
 
     //cout << findTiltRec (root);
     //cout << height (root) << endl;
     //cout << balancedTree (root) << endl; 
     
-    cout << leafSimilar (root1 , root2) << endl;
+    //cout << leafSimilar (root1 , root2) << endl;
 
+    BinaryTreeNode <int> * root = takeInputLevelWise ();
+    vector <vector <int>> ans = levelOrder (root);
+
+    for (int i=0 ; i<ans.size() ; ++i){
+        for (int j=0 ; j<ans[i].size() ; ++j){
+            cout << ans[i][j] << " ";
+        }
+        cout << endl;
+    }
+    
+    /*
+    vector <int> * out = getRootToNodePath (root , 1);
+    for (int i=0 ; i< out->size() ; ++i){
+        cout << out->at (i) << endl;
+    }
+    */
     return 0;
 }
