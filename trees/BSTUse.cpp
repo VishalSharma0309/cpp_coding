@@ -17,6 +17,16 @@ Binary Search Tree
         everything right to n is greater than n->data
 */
 
+/*
+Functions Included:
+    1. Print Tree Level Wise
+    2. Take Input Level Wise
+    3. Search in BST
+    4. In Order vector return
+    5. Print in Range 
+    6. Check if a Binary tree is BST or not
+    7. Construct a balanced BST from a sorted array
+*/
 void printTreeLevelWise (BinaryTreeNode <int> * root){
     cout << "Root Data : " << root->data << endl;
 

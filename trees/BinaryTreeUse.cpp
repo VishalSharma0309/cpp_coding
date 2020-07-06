@@ -8,6 +8,26 @@ i.e. children.size() <= 2 for each node in the tree
 
 using namespace std;
 
+/*
+Functions Included:
+    1. Print Tree (recursive)
+    2. Print Tree Level Wise
+    3. Take Input (recursive)
+    4. Take Input Level Wise
+    5. Count Nodes
+    6. Binary Tree Traversal
+        6.1 In-order Print
+        6.2 In-order vector return
+        6.3 Pre-order vector return
+    7. LeetCode 105. Construct Binary Tree from Preorder and Inorder Traversal
+    8. Leetcode QUES: Given a binary tree and a val, return the subtree with val as its root
+    9. LeetCode: 965. Univalued Binary Tree
+    10. LeetCode: 101. Symmetric Tree
+    11. 100. Same Tree
+    12. LeetCode 104. Maximum Depth of Binary Tree
+    13. LeetCode 543: Diameter of a binary tree
+
+*/
 void printTree (BinaryTreeNode <int> * root){
     // base case required in case of binary trees
     if (root == NULL){
@@ -176,6 +196,7 @@ vector <int> preorder (BinaryTreeNode <int> * root){
 
 }
 
+// LeetCode 105. Construct Binary Tree from Preorder and Inorder Traversal
 // QUES: Create the binary tree if given its in-order and pre-order in 1-D form.
 // NO DUPLICATES ALLOWED IN THE TREE
 /*

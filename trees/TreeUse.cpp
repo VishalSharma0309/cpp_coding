@@ -6,6 +6,22 @@ using namespace std;
 //  take input level-wise using queue
 // maintain a queue with TreeNodes
 // each element from the front is taken and its children are then added to the queue 
+
+/*
+Functions Included:
+    1. Take Input Level Wise
+    2. Take Input (recursive)
+    3. Print Tree (recursive)
+    4. Print Tree Level Wise
+    5. Count Nodes
+    6. Height
+    7. Print Nodes at 'k' depth
+    8. Count Leaf
+    9. Tree Traversal
+        9.1 Post-order
+        9.2 Pre-order
+    10. Delete Tree
+*/
 TreeNode <int> * takeInputLevelWise(){
     int rootData;
     cout << "Enter root data" << endl;

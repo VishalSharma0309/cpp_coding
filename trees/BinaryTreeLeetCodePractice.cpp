@@ -3,7 +3,24 @@
 
 using namespace std;
 
+/*
 
+
+LeetCode Questions included:
+    563. Binary Tree Tilt
+    226. Invert Binary Tree
+    110. Balanced Binary Tree
+    572. Subtree of Another Tree  
+    872. Leaf-Similar Trees
+    111. Minimum Depth of Binary Tree
+    LeetCode : Path to the node
+    102. Binary Tree Level Order Traversal
+    637. Average of Levels in Binary Tree    
+
+Other Functions:
+    1. Print Tree Level Wise
+    2. Take Input Level Wise
+*/
 void printTreeLevelWise (BinaryTreeNode <int> * root){
     cout << "Root Data : " << root->data << endl;
 
@@ -341,6 +358,43 @@ vector <vector <int> > levelOrder (BinaryTreeNode <int> * root){
     return lo;
 }
 
+/*
+637. Average of Levels in Binary Tree
+Given a non-empty binary tree, return the average value of the nodes on each level in the form of an array. 
+*/
+
+vector <double> averageOfLevels (BinaryTreeNode <int> * root){
+    vector <double> ans;
+    queue <BinaryTreeNode <int> *> pendingNodes;
+
+    pendingNodes.push (root);
+
+    while (pendingNodes.size()!=0){
+        
+        int curLevel = pendingNodes.size();
+        double avg = 0;
+        
+        for (int i=0 ; i<curLevel ; ++i){
+            BinaryTreeNode <int> * f = pendingNodes.front();
+            pendingNodes.pop();
+            
+            avg += f->data;
+            if (f->left != NULL){
+                pendingNodes.push (f->left);
+            } 
+            if (f->right != NULL){
+                pendingNodes.push (f->right);
+            }
+        }
+
+        avg = (double) avg/curLevel;
+        ans.push_back (avg);
+    }
+
+    return ans;
+}
+
+
 // 1 2 2 3 3 -1 -1 4 4 -1 -1 -1 -1 -1 -1
 
 /*
@@ -364,6 +418,7 @@ int main(){
     //cout << leafSimilar (root1 , root2) << endl;
 
     BinaryTreeNode <int> * root = takeInputLevelWise ();
+    /*
     vector <vector <int>> ans = levelOrder (root);
 
     for (int i=0 ; i<ans.size() ; ++i){
@@ -372,7 +427,8 @@ int main(){
         }
         cout << endl;
     }
-    
+    */
+
     /*
     vector <int> * out = getRootToNodePath (root , 1);
     for (int i=0 ; i< out->size() ; ++i){
