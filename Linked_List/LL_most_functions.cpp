@@ -10,7 +10,7 @@
 //6. delete node
 //7. delete node recursively
 //8. delete specific node (not the tail)
-//9. remove all nodes with a partical values
+//9. remove all nodes with a particular values
 //10. insert at the end
 //11. remove duplicates
 //12. reverse a LL (none of these is the best approach)
