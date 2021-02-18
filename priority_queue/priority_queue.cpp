@@ -86,6 +86,9 @@ header: #include <queue>
 priority_queue <int> pq;
 * By Default MAX priority order in in-built
 
+* Creating a min heap
+priority_queue <int, vector<int>, greater<int> > pq;
+
 FUNCTIONS:
 1. empty ()
 2. size ()
@@ -400,6 +403,126 @@ void kSmallestElements (vector <int> arr, int k){
         pq.pop();
     }
 
+}
+
+/*
+Leetcode 455: Assign cookies
+*/
+int findContentChildren (vector <int> & g, vector <int> & s){
+    priority_queue <int> gr;
+    priority_queue <int> si;
+
+    int ans=0;
+
+    for (int i=0 ; i<g.size() ; ++i){
+        gr.push(g[i]);
+    }
+
+    for (int i=0 ; i<s.size() ; ++i){
+        si.push(s[i]);
+    }
+
+    for (int i=0 ; i<g.size() && !gr.empty() && !si.empty() ; ++i){
+        if (gr.top() <=  si.top()){
+            ans++;
+            gr.pop();
+            si.pop();
+        }
+        else {
+            gr.pop();
+        }
+    }
+
+    return ans;
+} 
+
+
+
+/*
+LeetCode 215. Kth Largest Element in an Array
+
+*/
+int findKthLargest(vector<int>& nums, int k) {
+    priority_queue <int, vector<int>, greater<int> > pq;
+    for (int i=0 ; i<k ; ++i){
+        pq.push(nums[i]);
+    }
+        
+    for (int i=k ; i<nums.size() ; ++i){
+        if (nums[i] > pq.top()){
+            pq.pop();
+            pq.push(nums[i]);
+        }
+    }
+        
+    return pq.top();
+}
+
+
+/*
+1046. Last Stone Weight
+*/
+    int lastStoneWeight(vector<int>& stones) {
+        priority_queue <int> pq;
+        
+        for (int i=0 ; i<stones.size() ; ++i){
+            pq.push(stones[i]);
+        }
+        
+        while (pq.size()!=1 && pq.size()!=0){
+            int s1 = pq.top();
+            pq.pop();
+            int s2 = pq.top();
+            pq.pop();
+            if (s1!=s2)
+                pq.push(abs(s1-s2));
+        }
+        
+        if (pq.size()==1){
+            return pq.top();
+        }
+        else {
+            return 0;
+        }
+    }
+
+
+/*
+378. Kth Smallest Element in a Sorted Matrix
+
+*/
+
+int kthSmallest(vector<vector<int>>& matrix, int k){
+
+    priority_queue <int> pq;
+    int o = 0;
+    for (int i=0 ; i<matrix.size() ; ++i){
+
+        for (int j=0 ; j<matrix[i].size() && o!=k ; ++j){
+            pq.push(matrix[i][j]);
+            //cout << matrix[i][j] << " ";
+            ++o;
+        }
+    }
+        cout << endl;
+
+    o = 0;
+    for (int i=0 ; i<matrix.size() ; ++i){
+
+        for (int j=0 ; j<matrix[i].size(); ++j){
+            if (o<k){
+                o++;
+            }
+            else {
+                //cout << matrix[i][j] << " " << pq.top() << endl;
+                if (matrix[i][j] < pq.top()){
+                    pq.pop();
+                    pq.push(matrix[i][j]);
+                }
+            }
+        }
+    }
+    return pq.top();
 }
 
 int main(){
