@@ -124,6 +124,70 @@ string frequencySort(string s){
     return sol;
 
 }
+/*
+1636. Sort Array by Increasing Frequency
+
+NOT COMPLETE
+*/
+vector<int> frequencySort(vector<int>& nums) {
+    
+    unordered_map <int, int> x;
+
+    for (int i=0 ; i<nums.size() ; ++i){
+        x[nums[i]]++;
+    }
+
+    unordered_map <int, int> :: iterator it_x = x.begin();
+
+    multimap <int, int> y;
+
+    while (it_x != x.end()){
+        y.insert(make_pair(it_x->second , it_x->first));
+        it_x ++;
+    }
+
+    
+
+}
+
+/*
+373. Find K Pairs with Smallest Sums
+
+NOT COMPLETE
+*/
+vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+    unordered_map <pair<int, int>, int> x;
+
+    for (int i=0 ; i<nums1.size() ; ++i){
+
+        for (int j=0 ; j<nums2.size() ; ++j){
+            x[make_pair(nums1[i], nums2[j])] = nums1[i] + nums2[j];
+        }
+    }
+
+    unordered_map <pair <int, int>, int> :: iterator it_x = x.begin();
+    multimap <int, pair<int, int>> y;
+
+    while (it_x != x.end()){
+        y.insert(make_pair(it_x->second , it_x->first));
+        it_x ++;
+    }
+
+    multimap <int, pair<int, int>> :: iterator it_y = y.begin();
+
+    vector<vector<int>> sol;
+    
+    for (int i=0 ; i<k ; ++i){
+        vector <int> temp;
+        temp.push_back (it_y->second.first);
+        temp.push_back (it_y->second.second);
+        sol[i] = temp;
+        it_y ++;
+    }
+
+    return sol;
+}
+
 
 int main() {
     vector <int> in = {0,0,1,1,2,3,2,3,4,4,5,0};
